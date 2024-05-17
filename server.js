@@ -20,7 +20,7 @@ app.get('/get-location', (req, res) => {
 });
 
 // Define a route handler for the /display route
-app.get('/display', (req, res) => {
+app.get('/', (req, res) => {
     // Set the content type to HTML
     res.setHeader('Content-Type', 'text/html');
     // Send the HTML file as the response

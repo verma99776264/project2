@@ -22,7 +22,7 @@
         var mobileLocationMarker;
 
         async function fetchLocation() {
-            const response = await fetch('http://localhost:3000/get-location');
+            const response = await fetch('http://https://project2-3dlj.onrender.com/get-location');
             const data = await response.json();
             if (data && data.latitude && data.longitude) {
                 var lat = data.latitude;
