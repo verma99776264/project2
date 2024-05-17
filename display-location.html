@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track Mobile Location</title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+</head>
+<body>
+    <div id="map" style="width: 900px; height: 580px"></div>
+    <button onclick="fetchLocation()">Fetch Mobile Location</button>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script>
+        function myFun()
+        {
+            var mapOptions = {
+            center: [23.25469000, 77.40289000],
+            zoom: 15
+        }
+
+        var map = L.map('map', mapOptions);
+
+        var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        map.addLayer(layer);
+
+        var mobileLocationMarker;
+
+        async function fetchLocation() {
+            const response = await fetch('http://localhost:3000/get-location');
+            const data = await response.json();
+            if (data && data.latitude && data.longitude) {
+                var lat = data.latitude;
+                var lng = data.longitude;
+                map.setView([lat, lng], 15);
+
+                if (mobileLocationMarker) {
+                    map.removeLayer(mobileLocationMarker);
+                }
+
+                mobileLocationMarker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup("Mobile is here!").openPopup();
+            } else {
+                alert('No location data available');
+            }
+        }
+        }
+
+        setInterval(myFun, 3000);
+    </script>
+</body>
+</html>
