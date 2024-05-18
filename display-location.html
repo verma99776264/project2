@@ -2,12 +2,12 @@
 <html>
 <head>
     <title>Track Mobile Location</title>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css"/>
 </head>
 <body>
     <div id="map" style="width: 900px; height: 580px"></div>
     <button onclick="fetchLocation()">Fetch Mobile Location</button>
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
     <script>
         var mapOptions = {
             center: [23.25469000, 77.40289000],
@@ -16,13 +16,13 @@
 
         var map = L.map('map', mapOptions);
 
-        var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        var layer = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         map.addLayer(layer);
 
         var mobileLocationMarker;
 
         async function fetchLocation() {
-            const response = await fetch('http://https://project2-3dlj.onrender.com/get-location');
+            const response = await fetch('https://project2-3dlj.onrender.com/get-location');
             const data = await response.json();
             if (data && data.latitude && data.longitude) {
                 var lat = data.latitude;
