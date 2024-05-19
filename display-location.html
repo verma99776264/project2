@@ -6,7 +6,7 @@
 </head>
 <body>
     <div id="map" style="width: 900px; height: 580px"></div>
-    <button onclick="fetchLocation()">Fetch Mobile Location</button>
+    <button onclick="fetchAndDisplayLocation()">Fetch Mobile Location</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
     <script>
         var mapOptions = {
@@ -21,22 +21,27 @@
 
         var mobileLocationMarker;
 
-        async function fetchLocation() {
-            const response = await fetch('https://project2-3dlj.onrender.com/get-location');
-            const data = await response.json();
-            if (data && data.latitude && data.longitude) {
-                var lat = data.latitude;
-                var lng = data.longitude;
-                map.setView([lat, lng], 15);
+        async function fetchAndDisplayLocation() {
+            var name = prompt("Please enter your name:");
+            if (name !== null && name !== "") {
+                const response = await fetch(`https://project2-3dlj.onrender.com/get-location/${name}`);
+                const data = await response.json();
+                if (data && data.latitude && data.longitude) {
+                    var lat = data.latitude;
+                    var lng = data.longitude;
+                    map.setView([lat, lng], 15);
 
-                if (mobileLocationMarker) {
-                    map.removeLayer(mobileLocationMarker);
+                    if (mobileLocationMarker) {
+                        map.removeLayer(mobileLocationMarker);
+                    }
+
+                    mobileLocationMarker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup(`${name}'s mobile is here!`).openPopup();
+                } else {
+                    alert('No location data available for the provided name');
                 }
-
-                mobileLocationMarker = L.marker([lat, lng]).addTo(map)
-                    .bindPopup("Mobile is here!").openPopup();
             } else {
-                alert('No location data available');
+                alert('Name cannot be empty');
             }
         }
     </script>
