@@ -6,38 +6,34 @@
 <body>
     <h1>Sending Location...</h1>
     <script>
-        // Replace '192.168.80.67' with your actual laptop IP address
         const serverUrl = 'https://project2-3dlj.onrender.com/update-location';
+        let name = localStorage.getItem('name');
 
         function sendLocation() {
+            if (name) {
+                getLocation();
+            } else {
+                askName();
+            }
+        }
+
+        function askName() {
+            name = prompt("Please enter your name:");
+            if (name) {
+                localStorage.setItem('name', name);
+                getLocation();
+            } else {
+                console.error('Name cannot be empty');
+            }
+        }
+
+        function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(function(position) {
                     var lat = position.coords.latitude;
                     var lng = position.coords.longitude;
 
-                    // Prompt for the name
-                    var name = prompt("Please enter your name:");
-
-                    // Check if the name is not empty
-                    if (name !== null && name !== "") {
-                        fetch(serverUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ name: name, latestLocation: { latitude: lat, longitude: lng } })
-                        }).then(response => {
-                            if (response.ok) {
-                                console.log('Location sent successfully');
-                            } else {
-                                console.error('Failed to send location');
-                            }
-                        }).catch(error => {
-                            console.error('Error sending location:', error);
-                        });
-                    } else {
-                        console.error('Name cannot be empty');
-                    }
+                    sendLocationData(lat, lng);
                 }, function(error) {
                     console.error('Error getting location:', error);
                 }, {
@@ -48,6 +44,24 @@
             } else {
                 alert('Geolocation is not supported by this browser.');
             }
+        }
+
+        function sendLocationData(lat, lng) {
+            fetch(serverUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: name, latestLocation: { latitude: lat, longitude: lng } })
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Location sent successfully');
+                } else {
+                    console.error('Failed to send location');
+                }
+            }).catch(error => {
+                console.error('Error sending location:', error);
+            });
         }
 
         sendLocation();
