@@ -5,9 +5,11 @@
 </head>
 <body>
     <h1>Sending Location...</h1>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const serverUrl = 'https://project2-3dlj.onrender.com/update-location';
+        const serverUrl = 'https://project2-3dlj.onrender.com';
         let name = localStorage.getItem('name');
+        const socket = io(serverUrl);
 
         function sendLocation() {
             if (name) {
@@ -47,21 +49,7 @@
         }
 
         function sendLocationData(lat, lng) {
-            fetch(serverUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: name, latestLocation: { latitude: lat, longitude: lng } })
-            }).then(response => {
-                if (response.ok) {
-                    console.log('Location sent successfully');
-                } else {
-                    console.error('Failed to send location');
-                }
-            }).catch(error => {
-                console.error('Error sending location:', error);
-            });
+            socket.emit('locationUpdate', { name: name, latestLocation: { latitude: lat, longitude: lng } });
         }
 
         sendLocation();
