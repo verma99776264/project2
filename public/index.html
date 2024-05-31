@@ -14,22 +14,25 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
-        // Initialize the map
-        var map = L.map('map').setView([0, 0], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-        // Add a marker to the map
-        var marker = L.marker([0, 0]).addTo(map);
-
         // Connect to the server via Socket.IO
         var socket = io();
 
-        // Listen for location updates
-        socket.on('locationUpdate', function(location) {
-            // Update the marker position on the map
-            marker.setLatLng([location.lat, location.lng]);
-            // Pan the map to the marker's position
-            map.panTo([location.lat, location.lng]);
+        // Listen for the initial location update
+        socket.once('locationUpdate', function(location) {
+            // Initialize the map
+            var map = L.map('map').setView([location.lat, location.lng], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            // Add a marker to the map
+            var marker = L.marker([location.lat, location.lng]).addTo(map);
+
+            // Listen for subsequent location updates
+            socket.on('locationUpdate', function(location) {
+                // Update the marker position on the map
+                marker.setLatLng([location.lat, location.lng]);
+                // Pan the map to the marker's position
+                map.panTo([location.lat, location.lng]);
+            });
         });
     </script>
 </body>
