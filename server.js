@@ -7,26 +7,40 @@ const socketIo = require('socket.io');
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-
-const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// WebSocket connection
-io.on('connection', (socket) => {
-    console.log('New client connected');
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
+// Serve static files from the public directory
+app.use(express.static('public'));
+
+// Route to send the initial map page
+app.get('/display', (req, res) => {
+    res.sendFile(__dirname + '/public/display.html');
 });
 
-// Endpoint to update location
-app.post('/update-location', (req, res) => {
-    const { name, latestLocation } = req.body;
-    io.emit('locationUpdate', { name, latestLocation });
+// Route to send the updated location from the mobile device
+app.post('/send', (req, res) => {
+    // Handle the location update from the mobile device and emit it to all connected clients
+    // For demonstration purposes, let's assume the location is received in JSON format
+    const location = req.body;
+    io.emit('locationUpdate', location);
     res.sendStatus(200);
 });
 
+// Socket.IO connection
+io.on('connection', (socket) => {
+    console.log('A client connected');
+
+    // You could listen for other events here if needed
+
+    // Handle disconnect
+    socket.on('disconnect', () => {
+        console.log('A client disconnected');
+    });
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
