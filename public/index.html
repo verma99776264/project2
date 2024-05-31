@@ -1,1 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Location Display</title>
+    <!-- Include OpenStreetMap library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">
+</head>
+<body>
+    <!-- Create a div for the map -->
+    <div id="map" style="height: 400px;"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([0, 0], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        // Connect to the server via Socket.IO
+        var socket = io();
+
+        // Listen for location updates
+        socket.on('locationUpdate', function(location) {
+            // Update the marker position on the map
+            marker.setLatLng([location.lat, location.lng]);
+        });
+
+        // Add a marker to the map
+        var marker = L.marker([0, 0]).addTo(map);
+    </script>
+</body>
+</html>
