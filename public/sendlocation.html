@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Location</title>
+</head>
+<body>
+    <h1>Send Location</h1>
+    <form id="locationForm">
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" required><br><br>
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" required><br><br>
+        <button type="submit">Send Location</button>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        // Connect to the server via Socket.IO
+        var socket = io();
+
+        // Handle form submission
+        document.getElementById('locationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Get latitude and longitude values from the form
+            var latitude = document.getElementById('latitude').value;
+            var longitude = document.getElementById('longitude').value;
+            // Emit the location update to the server
+            socket.emit('locationUpdate', {lat: parseFloat(latitude), lng: parseFloat(longitude)});
+            alert('Location sent successfully!');
+            // Clear the form
+            document.getElementById('locationForm').reset();
+        });
+    </script>
+</body>
+</html>
