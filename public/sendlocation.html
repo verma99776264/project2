@@ -19,8 +19,19 @@
                 // Get latitude and longitude values from Geolocation API
                 var latitude = position.coords.latitude;
                 var longitude = position.coords.longitude;
-                // Emit the location update to the server
-                socket.emit('locationUpdate', {lat: latitude, lng: longitude});
+                
+                // Create the location object
+                var locationData = {
+                    lat: latitude,
+                    lng: longitude
+                };
+
+                // Create the request
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/send', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify(locationData));
+                
                 console.log('Location sent successfully!');
             });
         }
