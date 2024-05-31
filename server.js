@@ -36,6 +36,7 @@ app.post('/send', (req, res) => {
     // Handle the location update from the mobile device and emit it to all connected clients
     // For demonstration purposes, let's assume the location is received in JSON format
     const location = req.body;
+console.log('Received location update:', location);
     io.emit('locationUpdate', location);
     res.sendStatus(200);
 });
